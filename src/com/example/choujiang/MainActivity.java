@@ -42,23 +42,27 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private int number;
 	Random random = new Random();
-	private boolean isContinue = true;
-	private boolean isStop = false;
+	private boolean isContinue = true;			//æ˜¯å¦ç»§ç»­ç”Ÿæˆä¸­å¥–äººå‘˜åå•
+	private boolean isStop = false;				//æ˜¯å¦åœæ­¢äº†
 
 	private LuckyNameListAdapter mAdapter;
 	private Context mContext;
-	private List<String> luckyList = new ArrayList<String>();
-	private List<String> afterChooseList = new ArrayList<String>();
+	private List<String> luckyList = new ArrayList<String>();			//æ‰€æœ‰äººåå•
+	private List<String> afterChooseList = new ArrayList<String>();		//å‰©ä½™äººåå•
 
-	private String awardName = "";
-	private MediaPlayer player;
-	
+	private String luckyName = "";			//ä¸­å¥–äººå‘˜å§“å
+	private MediaPlayer player;				//éŸ³é¢‘æ’­æ”¾
+
 	private Handler mHandler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 1:
 				if (luckyList != null && number < luckyList.size()) {
-					mName.setText(luckyList.get(number));
+					if (isContinue) {
+						mName.setText(luckyList.get(number));
+					} else {
+						mName.setText("");
+					}
 				}
 				break;
 			case 2:
@@ -80,32 +84,30 @@ public class MainActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mContext = this;
-		
+
 		setTitle("");
 		initViews();
 	}
-	
+
 	/* 
 	 */
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		
-		
-		
-		if(luckyList!=null&& luckyList.size()>0){
+
+		if (luckyList != null && luckyList.size() > 0) {
 			luckyList.clear();
 		}
 		initDatas();
-		
-//		Toast.makeText(mContext, "ÖØĞÂ¿ªÊ¼³é½±", Toast.LENGTH_SHORT).show();
+
+		// Toast.makeText(mContext, "é‡æ–°å¼€å§‹æŠ½å¥–", Toast.LENGTH_SHORT).show();
 		if (afterChooseList != null && afterChooseList.size() > 0) {
 			afterChooseList.clear();
 			mAdapter.notifyDataSetChanged();
 			mNameList.setAdapter(mAdapter);
 		}
-		
+
 	}
 
 	/**
@@ -123,7 +125,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		mBtnSubmit.setOnClickListener(this);
 		mBtnStop.setOnClickListener(this);
 		mBtnClear.setOnClickListener(this);
-		
+
 		player = MediaPlayer.create(mContext, R.raw.music);
 		player.setLooping(true);
 	}
@@ -167,44 +169,44 @@ public class MainActivity extends Activity implements OnClickListener {
 				.findViewById(R.id.edtInput);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle("ĞÂÔöĞÒÔËÕß");
+		builder.setTitle("æ–°å¢ç”¨æˆ·");
 		builder.setView(textEntryView);
-		builder.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// Ìí¼Óµ½SharedPreferencesÖĞ
+				// æ·»åŠ åˆ°SharedPreferencesä¸­
 				String name = edtInput.getText().toString();
 				if (!TextUtils.isEmpty(name)) {
 					addToSharedPreference(name);
 				} else {
-					Toast.makeText(mContext, "ÇëÊäÈëÒ»¸öĞÒÔËÈË¶ù", Toast.LENGTH_SHORT)
+					Toast.makeText(mContext, "è¯·è¾“å…¥ä¸€ä¸ªå§“å", Toast.LENGTH_SHORT)
 							.show();
 				}
 			}
 		});
 
-		builder.setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
+		builder.setNegativeButton("å–æ¶ˆ", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// Ê²Ã´¶¼²»²Ù×÷
+				// ä»€ä¹ˆéƒ½ä¸æ“ä½œ
 			}
 		});
 		builder.show();
 
 	}
 
-	// ³õÊ¼»¯Êı¾İ
+	// åˆå§‹åŒ–æ•°æ®
 	public void initDatas() {
 
 		String nameStr = getFromSharedPreference();
 		String[] allNameArrays = nameStr.split(",");
 
-		if(luckyList!=null&& luckyList.size()>0){
+		if (luckyList != null && luckyList.size() > 0) {
 			luckyList.clear();
 		}
-		// µÚÒ»´Î´ÓSharedPreferencesÖĞ»ñÈ¡µ½ÓÃ»§ÁĞ±í£¬¸´ÖÆµ½luckyListÁĞ±íÖĞ
+		// ç¬¬ä¸€æ¬¡ä»SharedPreferencesä¸­è·å–åˆ°ç”¨æˆ·åˆ—è¡¨ï¼Œå¤åˆ¶åˆ°luckyListåˆ—è¡¨ä¸­
 		for (int i = 0; i < allNameArrays.length; i++) {
 			String people = allNameArrays[i];
 			luckyList.add(people);
@@ -220,8 +222,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			player.start();
 			mName.setTextSize(40);
 			mName.setTextColor(R.color.gray);
-			// ´ÓLuckyListÖĞÉ¾³ıÓÃ»§
-			String str = awardName;
+			// ä»LuckyListä¸­åˆ é™¤ç”¨æˆ·
+			String str = luckyName;
 			for (int i = 0; i < luckyList.size(); i++) {
 				if (luckyList.get(i) == str) {
 					luckyList.remove(i);
@@ -230,7 +232,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 
 			isContinue = true;
-			isStop = true;//¿ÉÒÔ½øĞĞµã»÷Í£Ö¹°´Å¥
+			isStop = true;// å¯ä»¥è¿›è¡Œç‚¹å‡»åœæ­¢æŒ‰é’®
 			mThread = new Thread() {
 				@Override
 				public void run() {
@@ -241,7 +243,7 @@ public class MainActivity extends Activity implements OnClickListener {
 							if (luckyList != null && luckyList.size() >= 2) {
 								number = random.nextInt(luckyList.size());
 							} else {
-								Toast.makeText(mContext, "ÇëÌí¼ÓÖÁÉÙÁ½¸öĞÒÔË¶ù",
+								Toast.makeText(mContext, "è¯·æ·»åŠ è‡³å°‘ä¸¤ä¸ªç”¨æˆ·",
 										Toast.LENGTH_SHORT).show();
 								isContinue = false;
 							}
@@ -261,7 +263,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		case R.id.id_stop:
 			player.pause();
 			player.seekTo(0);
-			if(false == isStop){
+			if (false == isStop) {
 				return;
 			}
 			isContinue = false;
@@ -270,33 +272,26 @@ public class MainActivity extends Activity implements OnClickListener {
 			mBtnStop.setClickable(false);
 			mName.setTextColor(Color.RED);
 			mName.setTextSize(60);
+			mName.setText("");
 
 			if (luckyList.size() > 1) {
-				try {
-					Thread.sleep(200);
-					// ½«ÖĞ½±ºÅÂë½øĞĞ¼ÇÂ¼
-					awardName = luckyList.get(number);
-					recordLuckyPeople(luckyList.get(number));
+				// å°†ä¸­å¥–å·ç è¿›è¡Œè®°å½•
+				luckyName = luckyList.get(number);
+				recordLuckyPeople(luckyName);
 
-					LayoutInflater inflater = LayoutInflater.from(mContext);
-					View awardView = inflater
-							.inflate(R.layout.dialogshow, null);
-					TextView awardName = (TextView) awardView
-							.findViewById(R.id.id_award_name);
-					AlertDialog.Builder builder = new AlertDialog.Builder(
-							mContext);
-					awardName.setText(luckyList.get(number));
-					builder.setView(awardView);
-					builder.setTitle("ÖĞ½±");
-					// builder.setMessage("ĞÒÔË¶ù£º"+ luckyList.get(number));
-					builder.setPositiveButton("È·¶¨", null);
-					builder.show();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				LayoutInflater inflater = LayoutInflater.from(mContext);
+				View awardView = inflater.inflate(R.layout.dialogshow, null);
+				TextView awardName = (TextView) awardView
+						.findViewById(R.id.id_award_name);
+				AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+				awardName.setText(luckyName);
+				builder.setView(awardView);
+				builder.setTitle("ä¸­å¥–");
+				// builder.setMessage("å¹¸è¿å„¿ï¼š"+ luckyList.get(number));
+				builder.setPositiveButton("ç¡®å®š", null);
+				builder.show();
 			} else {
-				Toast.makeText(mContext, "µ±Ç°½±³ØÖ»ÓĞÒ»¸öĞÒÔËÈËÅ¶£¡", Toast.LENGTH_SHORT)
+				Toast.makeText(mContext, "å½“å‰å¥–æ± åªæœ‰ä¸€ä¸ªç”¨æˆ·å“¦ï¼", Toast.LENGTH_SHORT)
 						.show();
 			}
 
@@ -312,8 +307,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
-	
-	
 
 	/* 
 	 */
@@ -339,23 +332,23 @@ public class MainActivity extends Activity implements OnClickListener {
 				Activity.MODE_PRIVATE);
 		SharedPreferences.Editor editor = getSp.edit();
 
-		// ÏÈ»ñÈ¡ËùÓĞÈËµÄnameÁĞ±í
+		// å…ˆè·å–æ‰€æœ‰äººçš„nameåˆ—è¡¨
 		String allName = getSp.getString("namelist", "");
 		String[] allNameArrays = allName.split(",");
 		boolean isAdd = true;
 		for (int i = 0; i < allNameArrays.length; i++) {
 			if (allNameArrays[i].equals(keyValue)) {
-				Toast.makeText(mContext, "ÄúÒÑ¾­ÊÇĞÒÔË¶ùÁË", Toast.LENGTH_SHORT).show();
+				Toast.makeText(mContext, "è¯¥ç”¨æˆ·å·²ç»æ·»åŠ ", Toast.LENGTH_SHORT).show();
 				isAdd = false;
 				break;
 			}
 		}
 
 		if (isAdd) {
-			// Ìí¼Óµ½SharedPreferencesÖĞ
+			// æ·»åŠ åˆ°SharedPreferencesä¸­
 			StringBuilder sb = new StringBuilder(allName);
 			sb.append(keyValue + ",");
-			// Ìí¼Óµ½listÖĞ
+			// æ·»åŠ åˆ°listä¸­
 			luckyList.add(keyValue);
 			// mAdapter.notifyDataSetChanged();
 			editor.putString("namelist", sb.toString());
@@ -371,7 +364,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		return allName;
 	}
 
-	// ¼ÇÂ¼ÖĞ½±ÕßºÅÂë
+	// è®°å½•ä¸­å¥–è€…å·ç 
 	public void recordLuckyPeople(String name) {
 		afterChooseList.add(name);
 

@@ -91,12 +91,12 @@ public class DeleteActivity extends Activity{
 			public boolean onItemLongClick(AdapterView<?> parent, View view,
 					final int position, long id) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-				builder.setTitle("É¾³ıÂğ£¿");
-				builder.setPositiveButton("È·¶¨", new DialogInterface.OnClickListener() {
+				builder.setTitle("ä¸­å¥–å•¦");
+				builder.setPositiveButton("ç¡®å®š", new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						// Ìí¼Óµ½SharedPreferencesÖĞ
+						// ï¿½ï¿½Óµï¿½SharedPreferencesï¿½ï¿½
 						String name = deleteList.get(position);
 						deleteList.remove(position);
 						mAdapter.notifyDataSetChanged();
@@ -109,7 +109,7 @@ public class DeleteActivity extends Activity{
 						
 						for (int i = 0; i < allNameArrays.length; i++) {
 							if (allNameArrays[i].equals(name)) {
-								// µÃµ½ÖØ¸´×Ö·û´®µÄÖÕµãÎ»ÖÃ
+								// ï¿½Ãµï¿½ï¿½Ø¸ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½Î»ï¿½ï¿½
 								endPosition = startPosition + name.length() + 1;
 								allName = allName.substring(0, startPosition)
 										+ allName.substring(endPosition);
@@ -125,13 +125,7 @@ public class DeleteActivity extends Activity{
 					}
 				});
 
-				builder.setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// Ê²Ã´¶¼²»²Ù×÷
-					}
-				});
+				builder.setNegativeButton("å–æ¶ˆ", null);
 				builder.show();
 				return false;
 			}
@@ -148,7 +142,7 @@ public class DeleteActivity extends Activity{
 		
 		String[] allNameArrays = allName.split(",");
 
-		// µÚÒ»´Î´ÓSharedPreferencesÖĞ»ñÈ¡µ½ÓÃ»§ÁĞ±í£¬¸´ÖÆµ½luckyListÁĞ±íÖĞ
+		// ä»SharedPreferencesä¸­è·å–å…¨éƒ¨ä¸­é—´äººå‘˜åå•
 		for (int i = 0; i < allNameArrays.length; i++) {
 			String people = allNameArrays[i];
 			deleteList.add(people);
@@ -157,7 +151,7 @@ public class DeleteActivity extends Activity{
 		if(deleteList.size()>0){
 			mHandler.sendEmptyMessage(1);
 		}else{
-			Toast.makeText(mContext, "»¹Ã»ÓĞÊı¾İ", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mContext, "æ²¡æœ‰å¯åˆ é™¤çš„æ•°æ®", Toast.LENGTH_SHORT).show();
 		}
 	}
 }
